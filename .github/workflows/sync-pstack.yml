@@ -1,0 +1,43 @@
+name: Sync pstack upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 7 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Import upstream
+        run: ./scripts/sync-upstream.py pstack
+
+      - name: Validate
+        run: ./scripts/validate.sh
+
+      - name: Detect changes
+        id: changes
+        run: |
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open sync PR
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/sync-pstack-upstream
+          delete-branch: true
+          commit-message: "chore: sync pstack upstream"
+          title: "chore: sync pstack upstream"
+          body-path: .sync-reports/pstack.md
+          draft: true
+          labels: upstream-sync
