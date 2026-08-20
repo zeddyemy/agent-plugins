@@ -1,0 +1,33 @@
+{
+  "name": "pstack",
+  "repository": "https://github.com/cursor/plugins.git",
+  "ref": "main",
+  "source_subdir": "pstack",
+  "snapshot_dir": "upstream/pstack",
+  "portable_dir": "plugins/pstack",
+  "tracked_paths": [
+    ".cursor-plugin/plugin.json",
+    "LICENSE",
+    "README.md",
+    "agents/poteto-agent.md",
+    "skills/architect",
+    "skills/arena",
+    "skills/blast-radius",
+    "skills/how",
+    "skills/interrogate",
+    "skills/poteto-mode",
+    "skills/swarm",
+    "skills/tdd"
+  ],
+  "overlay_paths": [
+    "agents/poteto-agent.md",
+    "skills/architect",
+    "skills/arena",
+    "skills/blast-radius",
+    "skills/how",
+    "skills/interrogate",
+    "skills/poteto-mode",
+    "skills/swarm",
+    "skills/tdd"
+  ]
+}

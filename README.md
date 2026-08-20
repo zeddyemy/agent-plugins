@@ -1,102 +1,90 @@
-# Agent Plugins
+# agent-plugins
 
-A portable collection of reusable agent plugins for **Claude Code** and **OpenAI Codex**.
-
-The repository keeps plugin behavior separate from harness-specific packaging so the same engineering workflows can be installed into multiple coding agents without maintaining divergent copies.
+A collection of portable engineering plugins for coding agents. One workflow source, thin runtime adapters.
 
 ## Plugins
 
 ### pstack
 
-A portable adaptation of Lauren Tan's [`pstack`](https://github.com/cursor/plugins/tree/main/pstack), focused on rigorous engineering workflows, verification, architecture, parallel investigation, and concise implementation.
+A portability-oriented adaptation of Lauren Tan's `pstack`, focused on rigorous engineering workflows,
+verification, architecture, adversarial review, and safe parallelism.
 
-This initial port includes:
+Upstream: https://github.com/cursor/plugins/tree/main/pstack
 
-- `poteto-mode`
-- `architect`
-- `tdd`
-- `interrogate`
-- `blast-radius`
-- `how`
-- `swarm`
-- `arena`
-- the `poteto-agent` Claude subagent
+## Claude Code
 
-See [`plugins/pstack/README.md`](plugins/pstack/README.md) for details.
-
-## Install
-
-### Claude Code
-
-This repository is a Claude Code plugin marketplace.
+Once this repository is on GitHub:
 
 ```text
 /plugin marketplace add zeddyemy/agent-plugins
 /plugin install pstack@zeddyemy-agent-plugins
 ```
 
-For local development or project-scoped installation, use the installer below.
-
-### Codex
-
-Install a plugin into your user-level Codex skills directory:
+For local development:
 
 ```bash
-./scripts/install.sh pstack --agent codex --scope user
+claude plugin marketplace add .
+claude plugin validate .
 ```
 
-Install into the current project:
-
-```bash
-./scripts/install.sh pstack --agent codex --scope project
-```
-
-### Claude Code via script
+You can also install the skill files directly:
 
 ```bash
 ./scripts/install.sh pstack --agent claude --scope user
 ```
 
-or:
+## Codex
+
+Install at user scope:
 
 ```bash
-./scripts/install.sh pstack --agent claude --scope project
+./scripts/install.sh pstack --agent codex --scope user
 ```
 
-## Repository layout
+Or into a repository:
+
+```bash
+./scripts/install.sh pstack --agent codex --scope project --project /path/to/repo
+```
+
+The default user destination is `~/.agents/skills`. Set `AGENT_SKILLS_HOME` if your Codex setup uses
+a different skills root.
+
+## Design
 
 ```text
 agent-plugins/
-├── .claude-plugin/
-│   └── marketplace.json
+├── .claude-plugin/marketplace.json
 ├── plugins/
 │   └── pstack/
-│       ├── .claude-plugin/
+│       ├── .claude-plugin/plugin.json
 │       ├── agents/
 │       └── skills/
-├── docs/
-│   └── PORTABILITY.md
-└── scripts/
-    ├── install.sh
-    └── validate.sh
+├── scripts/
+│   ├── install.sh
+│   └── validate.sh
+└── docs/PORTABILITY.md
 ```
 
-Each plugin owns its portable skills. Harness-specific metadata stays at the edges.
+The core rule is simple: plugin skills describe intent and engineering policy. Harness-specific
+packaging stays at the edge.
 
-## Design goals
+## Upstream sync
 
-1. **Portable first.** Skills should describe intent and engineering policy rather than vendor-specific tool calls.
-2. **Thin adapters.** Claude Code, Codex, and future harnesses should require minimal packaging glue.
-3. **Upstream-friendly.** Adapted plugins retain attribution and can be periodically resynced from their source projects.
-4. **Verifiable.** Installation and repository structure are validated by scripts rather than documentation alone.
-5. **Composable.** This is a collection, not a monolithic agent personality. Install only the plugins you want.
-
-## Validate
+Adapted plugins can track their source projects without overwriting portability changes. For pstack:
 
 ```bash
-./scripts/validate.sh
+./scripts/check-upstream.sh pstack
+./scripts/sync-upstream.py pstack
 ```
 
-## License
+The exact upstream revision is pinned in `upstreams/pstack.lock.json`. Imported source stays separate from `plugins/pstack/`, and `.sync-reports/pstack.md` flags overlays that need manual Claude/Codex review. A scheduled GitHub Action checks weekly and opens a draft sync PR when upstream moves. See `docs/UPSTREAM_SYNC.md`.
 
-This collection is MIT licensed. Adapted plugins retain their upstream notices and licensing. See [`NOTICE.md`](NOTICE.md).
+## Status
+
+`pstack` is an experimental first port, not a byte-for-byte mirror of upstream. The initial version
+contains the highest-leverage workflows while we validate behavior across Claude Code and Codex.
+
+## License and attribution
+
+This repository is MIT licensed. See `NOTICE.md` for upstream attribution.
