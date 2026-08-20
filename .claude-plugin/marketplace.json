@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "zeddyemy-agent-plugins",
+  "version": "0.1.0",
+  "description": "Portable agent engineering plugins for Claude Code and Codex.",
+  "owner": {
+    "name": "Emmanuel Olowu"
+  },
+  "plugins": [
+    {
+      "name": "pstack",
+      "source": "./plugins/pstack",
+      "description": "Portable rigorous engineering workflows inspired by poteto's pstack.",
+      "version": "0.1.0",
+      "category": "development"
+    }
+  ]
+}
